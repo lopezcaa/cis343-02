@@ -1,15 +1,13 @@
 #! /bin/bash
 
-if( $1 == "run" ) {
+if [ "$1" == "run" ]; then
     bison -d calc.y
-
     flex calc.l
+    gcc calc.tab.c lex.yy.c -o calc -lfl -lm
 
-    gcc calc.tab.c lexy.yy.c -o calc -lfl -lm
-}
-
-if( $1 == "clean" ) {
-    rm calc.tab.c
-    rm calc.tab.h
-    rm lexy.yy.c
-}
+elif [ "$1" == "clean" ]; then
+    rm -f calc.tab.c
+    rm -f calc.tab.h
+    rm -f lex.yy.c
+    rm -f calc
+fi
