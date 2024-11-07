@@ -10,9 +10,9 @@ class Projectile(pg.sprite.Sprite):
         self.rect.centery = shipLocation.y + 37
         self.enemies = enemies
         self.event = pg.USEREVENT + 1
-        self.fireSound = pg.mixer.Sound("fire.wav")
+        self.fireSound = pg.mixer.Sound("assets/fire.wav")
         self.fireSound.play()
-        self.explosionSound = pg.mixer.Sound("explosion.wav")
+        self.explosionSound = pg.mixer.Sound("assets/explosion.wav")
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
