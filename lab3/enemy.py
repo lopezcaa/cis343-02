@@ -11,7 +11,7 @@ class Enemy(pg.sprite.Sprite):
         self.speed = 1
 
     def update(self, delta):
-        self.rect.x -= self.speed * delta
+        self.rect.x -= self.speed
         
         holding = int(self.rect.x % 150)
 

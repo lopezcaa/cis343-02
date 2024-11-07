@@ -29,9 +29,9 @@ def main():
 
     # Start sound - Load background music and start it
     # playing on a loop - TODO
-    #pg.mixer.init()
-    #pg.mixer.music.load("assets/cpu-talk.mp3")
-    #pg.mixer.music.play(loops=-1, start=0.0)
+    pg.mixer.init()
+    pg.mixer.music.load("assets/cpu-talk.mp3")
+    pg.mixer.music.play(loops=-1, start=0.0)
 
     # Get font setup
     pg.freetype.init()
