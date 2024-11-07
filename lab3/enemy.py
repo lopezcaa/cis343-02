@@ -3,19 +3,9 @@ import pygame as pg
 
 # Complete me! - TODO
 class Enemy(pg.sprite.Sprite):
-    def __init__(self, position, ship):
+    def __init__(self, position):
         super(Enemy, self).__init__()
-        if ship == 0:
-            self.image = pg.image.load(os.path.join('assets', 'Ship1.png')).convert_alpha()
-        elif ship == 1:
-            self.image = pg.image.load(os.path.join('assets', 'Ship2.png')).convert_alpha()
-        elif ship == 2:
-            self.image = pg.image.load(os.path.join('assets', 'Ship3.png')).convert_alpha()
-        elif ship == 3:
-            self.image = pg.image.load(os.path.join('assets', 'Ship4.png')).convert_alpha()
-        elif ship == 4:
-            self.image = pg.image.load(os.path.join('assets', 'Ship5.png')).convert_alpha()
-
+        self.image = pg.image.load(os.path.join('assets', 'Ship1.png')).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.topleft = position
         self.speed = 1
