@@ -3,12 +3,31 @@ import pygame as pg
 
 # Complete me! - TODO
 class Enemy(pg.sprite.Sprite):
-    def __init__(self, position):
+    def __init__(self, position, ship):
         super(Enemy, self).__init__()
-        self.image = pg.image.load(os.path.join('assets', 'Ship1.png')).convert_alpha()
+
+        if ship == 1:
+            enemy_image = pg.image.load(os.path.join('assets', 'Ship1.png')).convert_alpha()
+            self.speed = 1
+        elif ship == 2:
+            enemy_image = pg.image.load(os.path.join('assets', 'Ship2.png')).convert_alpha()
+            self.speed = 2
+        elif ship == 3:
+            enemy_image = pg.image.load(os.path.join('assets', 'Ship3.png')).convert_alpha()
+            self.speed = 3
+        elif ship == 4:
+            enemy_image = pg.image.load(os.path.join('assets', 'Ship4.png')).convert_alpha()
+            self.speed = 4
+        elif ship == 5:
+            enemy_image = pg.image.load(os.path.join('assets', 'Ship5.png')).convert_alpha()
+            self.speed = 5
+
+        flippedImage = pg.transform.flip(enemy_image, flip_x=True, flip_y=False)
+        self.image = flippedImage
+
         self.rect = self.image.get_rect()
         self.rect.topleft = position
-        self.speed = 1
+        # self.speed = 1
 
     def update(self, delta):
         self.rect.x -= self.speed

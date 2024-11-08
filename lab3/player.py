@@ -15,7 +15,7 @@ class Player(pg.sprite.Sprite):
         self.image = pg.image.load(os.path.join('assets', 'Ship6.png')).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.centerx = 100  # Center of screen horizontally
-        self.rect.centery = 350  # Center of screen vertically
+        self.rect.centery = 450  # Center of screen vertically
         self.speed = 500  # Speed of player movement
 
     def draw(self, screen):
@@ -26,24 +26,20 @@ class Player(pg.sprite.Sprite):
 
     def up(self, delta):
         # TODO
-        # pass
         if self.rect.top > 0:
             self.rect.centery -= self.speed * delta
 
     def down(self, delta):
         # TODO
-        # pass
         if self.rect.bottom < 768:  # Screen height
             self.rect.centery += self.speed * delta
     
     def left(self, delta):
         # TODO
-        # pass
         if self.rect.x >= 30:
             self.rect.centerx -= self.speed * delta
 
     def right(self, delta):
         # TODO
-        # pass
-        if self.rect.x < 250:  # Screen height
+        if self.rect.x < 400:  # Screen height
             self.rect.centerx += self.speed * delta

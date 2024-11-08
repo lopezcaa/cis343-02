@@ -22,9 +22,11 @@ def main():
     enemies = pg.sprite.Group()
     projectiles = pg.sprite.Group()
 
+    switchEnemyType = 1
+
     for i in range(600, 1000, 75):
         for j in range(100, 600, 50):
-            enemy = Enemy((i, j))
+            enemy = Enemy((i, j), switchEnemyType)
             enemies.add(enemy)
 
     # Start sound - Load background music and start it
@@ -52,6 +54,9 @@ def main():
     clock.tick(fps)
     # Setup score variable
     score = 0
+
+    playerLives = 1
+
     while running:
 
         # First thing we need to clear the events.
@@ -77,9 +82,20 @@ def main():
                 projectiles.add(projectile)
                 shotDelta = 0
         # Check if all enemies are cleared - TODO
+        enemyCount = len(enemies)
+        if enemyCount == 0:
+            switchEnemyType += 1
 
-        if pg.sprite.spritecollideany(player, enemies):
-            running = False
+            if switchEnemyType == 6:
+                font.render_to(screen, (150, 150), "YOU WIN!", FONTCOLOR, None, size=165)
+                pg.display.flip()
+                pg.time.wait(2000)
+                running = False
+
+            for i in range(600, 1000, 75):
+                for j in range(100, 600, 50):
+                    enemy = Enemy((i, j), switchEnemyType)
+                    enemies.add(enemy)
 
         # Ok, events are handled, let's update objects!
         player.update(delta)
@@ -93,7 +109,16 @@ def main():
         player.draw(screen)
         enemies.draw(screen)
         projectiles.draw(screen)
-        font.render_to(screen, (10, 10), "Score: " + str(score), FONTCOLOR, None, size=64)
+        if pg.sprite.spritecollideany(player, enemies):
+            if playerLives == 0:
+                font.render_to(screen, (150, 150), "YOU LOSE", FONTCOLOR, None, size=165)
+                pg.display.flip()
+                pg.time.wait(2000)
+                running = False
+            playerLives -= 1
+            # TODO Move the player away from the enemies
+        else:
+            font.render_to(screen, (10, 10), "Score: " + str(score), FONTCOLOR, None, size=64)
 
         # When drawing is done, flip the buffer.
         pg.display.flip()
