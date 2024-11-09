@@ -55,7 +55,9 @@ def main():
     # Setup score variable
     score = 0
 
-    playerLives = 1
+    # Other game variables
+    playerLives = 2
+    play_round_one_only = 0
 
     while running:
 
@@ -64,7 +66,16 @@ def main():
             if event.type == pg.QUIT:
                 running = False
             if event.type == pg.USEREVENT + 1:
-                score += 100
+                if switchEnemyType == 1:
+                    score += 100
+                elif switchEnemyType == 2:
+                    score += 150
+                elif switchEnemyType == 3:
+                    score += 200
+                elif switchEnemyType == 4:
+                    score += 250
+                elif switchEnemyType == 5:
+                    score += 300
 
         keys = pg.key.get_pressed()
 
@@ -76,17 +87,22 @@ def main():
             player.left(delta)
         if keys[K_d]:
             player.right(delta)
+        if keys[K_q]:
+            running = False
         if keys[K_SPACE]:
             if shotDelta >= .25:
                 projectile = Projectile(player.rect, enemies)
                 projectiles.add(projectile)
                 shotDelta = 0
-        # Check if all enemies are cleared - TODO
+        if keys[K_1]:
+                play_round_one_only = 1
+
+        # Check if all enemies are cleared
         enemyCount = len(enemies)
         if enemyCount == 0:
             switchEnemyType += 1
 
-            if switchEnemyType == 6:
+            if switchEnemyType == 6 or play_round_one_only == 1:
                 font.render_to(screen, (150, 150), "YOU WIN!", FONTCOLOR, None, size=165)
                 pg.display.flip()
                 pg.time.wait(2000)
@@ -109,16 +125,27 @@ def main():
         player.draw(screen)
         enemies.draw(screen)
         projectiles.draw(screen)
+
+        # Check for collision logic
         if pg.sprite.spritecollideany(player, enemies):
             if playerLives == 0:
                 font.render_to(screen, (150, 150), "YOU LOSE", FONTCOLOR, None, size=165)
                 pg.display.flip()
                 pg.time.wait(2000)
                 running = False
+
             playerLives -= 1
-            # TODO Move the player away from the enemies
+            player = Player()
+
         else:
-            font.render_to(screen, (10, 10), "Score: " + str(score), FONTCOLOR, None, size=64)
+            font.render_to(screen, (20, 20), "Score: " + str(score), FONTCOLOR, None, size=50)
+            font.render_to(screen, (430, 20), "Lives: " + str(playerLives), FONTCOLOR, None, size=40)
+            font.render_to(screen, (680, 20), "Press q to quit", FONTCOLOR, None, size=40)
+
+            if play_round_one_only == 0:
+                font.render_to(screen, (20, 680), "Press [ 1 ] to only play round 1", FONTCOLOR, None, size=40)
+            else:
+                font.render_to(screen, (20, 680), "Round 1 only", FONTCOLOR, None, size=40)
 
         # When drawing is done, flip the buffer.
         pg.display.flip()

@@ -1,7 +1,6 @@
 import os
 import pygame as pg
 
-# Complete me! - TODO
 class Enemy(pg.sprite.Sprite):
     def __init__(self, position, ship):
         super(Enemy, self).__init__()
@@ -27,13 +26,13 @@ class Enemy(pg.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.topleft = position
-        # self.speed = 1
 
     def update(self, delta):
         self.rect.x -= self.speed
         
+        # Logic to make the enemies move up and down
+        # Based off of forward pixel movement
         holding = int(self.rect.x % 150)
-
         if (0 <= holding < 75) % 2 == 0:
             if holding % 3 == 0:
                 self.rect.y += 1
@@ -41,5 +40,6 @@ class Enemy(pg.sprite.Sprite):
             if holding % 3 == 0:
                 self.rect.y -= 1
 
+        # Reset the enemy when it goes off-screen to the left
         if self.rect.x <= 0:
-            self.rect.x = 1024  # Reset position after passing off-screen
+            self.rect.x = 1024
