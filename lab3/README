@@ -1,0 +1,12 @@
+Galaga Lab - Alonso Lopez
+
+I didn't work with a group.
+I finished finished each TODO in the files and finished the enemy file.
+
+I also added extra functionality:
+	1. The player having multiple lives
+	2. Extra movement around the screen (left and right movement)
+	3. Ability to play against one round of enemies or all
+	4. Quit the game by pressing "q"
+	5. Points given by enemies increases each round
+	6. Enemy movement goes in a wavy movement instead of straight across the screen

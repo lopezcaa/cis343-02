@@ -15,10 +15,8 @@ def main():
     # Get a screen object
     screen = pg.display.set_mode([1024, 768])
     
-    # Create a player - TODO
     player = Player()
 
-    # Create enemy and projectile Groups - TODO
     enemies = pg.sprite.Group()
     projectiles = pg.sprite.Group()
 
@@ -30,7 +28,6 @@ def main():
             enemies.add(enemy)
 
     # Start sound - Load background music and start it
-    # playing on a loop - TODO
     pg.mixer.init()
     pg.mixer.music.load("assets/cpu-talk.mp3")
     pg.mixer.music.play(loops=-1, start=0.0)
@@ -40,7 +37,6 @@ def main():
     font_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "./assets", "PermanentMarker-Regular.ttf")
     font_size = 64
     font = pg.freetype.Font(font_path, font_size)
-    # Make a tuple for FONTCOLOR - TODO
     FONTCOLOR = (255, 255, 255)
     # Startup the main game loop
     running = True
@@ -100,8 +96,10 @@ def main():
         # Check if all enemies are cleared
         enemyCount = len(enemies)
         if enemyCount == 0:
+            # Switches to the next enemy type
             switchEnemyType += 1
 
+            # If all enemy types are gone or first-round only was selected and won, win the game
             if switchEnemyType == 6 or play_round_one_only == 1:
                 font.render_to(screen, (150, 150), "YOU WIN!", FONTCOLOR, None, size=165)
                 pg.display.flip()
