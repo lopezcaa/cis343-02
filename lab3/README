@@ -1,7 +1,9 @@
 Galaga Lab - Alonso Lopez
 
 I didn't work with a group.
-I finished finished each TODO in the files and finished the enemy file.
+I finished each TODO in the files and finished the enemy file.
+
+Make sure to run the main.py file when present in the same directory to get it to read the assest properly.
 
 I also added extra functionality:
 	1. The player having multiple lives
