@@ -1,0 +1,34 @@
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>JS Practice</title>
+
+		<link rel="stylesheet" href="main.css">
+	</head>
+
+	<body>
+		<h1>Superhero Searchifier</h1>
+		Enter a search term:
+		<input type='text' id='term'/>
+		<br />
+		<button id='search' onclick='search()'>Search</button>
+		<div id='results'>
+
+		</div>
+		<script>
+			function search(){
+				// term contains the user search input
+				let term = document.getElementById('term').value;
+				console.log(term);
+				let results = document.getElementById('results');
+				// TODO: send request to the server using "fetch" function
+				// It will return a Promise object 
+				// Show the results returned from serve as a table
+			}
+		</script>
+	</body>
+</html>
