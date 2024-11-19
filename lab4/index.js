@@ -39,6 +39,22 @@ app.get('/search/:term',
 		// printing our user request
 		console.log(req.params);
 		// TODO: Return a list of heros that satisfy the user request
+
+		selected = heroes.filter(hero => {
+			return (
+				hero.Name.includes(term),
+				hero.Identity.includes(term),
+				hero.Alignment.includes(term),
+				hero.EyeColor.includes(term),
+				hero.HairColor.includes(term),
+				hero.Gender.includes(term),
+				hero.Status.includes(term),
+				hero.Appearances.includes(term),
+				hero.FirstAppearance.includes(term),
+				hero.Year.includes(term),
+				hero.Universe.includes(term)
+			);
+		});
 		
 		res.send(selected);
 	}

@@ -28,6 +28,44 @@
 				// TODO: send request to the server using "fetch" function
 				// It will return a Promise object 
 				// Show the results returned from serve as a table
+
+				fetch(`/search/${term}`)
+					// Get the response
+					.then(response => response.json())
+					
+					// This handles the response or returns "No Results Found"
+					// The found matches get placed in a table
+					.then(data => {
+						if(data.length > 0) {
+							console.log(data);
+							results.innerHTML = '';
+							const ul = document.createElement('ul');
+
+							data.forEach(hero => {
+								const li = document.createElement('li');
+								li.textContent = `${hero.Name},
+												  [${hero.Identity}],
+												  [${hero.Alignment}],
+												  [${hero.EyeColor}],
+												  [${hero.HairColor}],
+												  [${hero.Gender}],
+												  [${hero.Status}],
+												  [${hero.Appearances}],
+												  [${hero.FirstAppearance}],
+												  [${hero.Year}],
+												  [${hero.Universe}]`;
+								ul.appendChild(li);
+							});
+
+							results.appendChild(ul);
+						}
+						else {
+							results.innerHTML = 'No Results Found';
+						}
+					})
+
+					// Catch any errors and display the error message
+					.catch(error => results.innerHTML = `ERROR: ${error.message}`)
 			}
 		</script>
 	</body>
