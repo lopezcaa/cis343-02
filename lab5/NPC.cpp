@@ -1,6 +1,6 @@
-#include "NPC.h"
 #include <stdexcept>
 
+#include "NPC.h"
 
 //constructor to initialize an NPC
 NPC::NPC(std::string name, std::string description, std::vector<std::string> messages) {

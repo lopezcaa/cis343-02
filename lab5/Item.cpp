@@ -1,5 +1,6 @@
-#include "Item.h"
 #include <stdexcept>
+
+#include "Item.h"
 
 //constructor to initialize an item
 Item::Item(std::string name, int calories, float weight, std::string description) {
