@@ -3,6 +3,7 @@
 
 #include "Item.h"
 #include "NPC.h"
+#include "Location.h"
 
 
 int main(int argc, char** argv) {
@@ -29,6 +30,12 @@ int main(int argc, char** argv) {
     std::cout << "NPC1 desc: " << npc1.getDescription() << " | messageNUM: " << npc1.getMessageNum() << " | message: " << npc1.getCurrentMessage() << std::endl;
     std::cout << "NPC1 desc: " << npc1.getDescription() << " | messageNUM: " << npc1.getMessageNum() << " | message: " << npc1.getCurrentMessage() << std::endl;
     std::cout << "NPC1 desc: " << npc1.getDescription() << " | messageNUM: " << npc1.getMessageNum() << " | message: " << npc1.getCurrentMessage() << std::endl;
-    
+
+    Location place("Pandnos Hall",
+                    "Lots of science labs are in this building.",
+                    false);
+
+    std::cout << place << std::endl;
+
     return 0;
 }

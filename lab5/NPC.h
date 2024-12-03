@@ -1,5 +1,5 @@
-#ifndef NPC_H
-#define NPC_H
+#ifndef __H_NPC__
+#define __H_NPC__
 
 #include <string>
 #include <iostream>
@@ -23,10 +23,7 @@ class NPC {
         void setCurrentMessage(std::string message);
 
         //overloading the stream operator to show NPC's name only
-        friend std::ostream& operator<<(std::ostream& os, const NPC& npc) {
-            os << npc.name;
-            return os;
-        }
+        friend std::ostream& operator<<(std::ostream& os, const NPC& npc);
 
     private:
         std::string name;

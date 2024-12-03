@@ -5,7 +5,7 @@
 #include "Item.h"
 
 //constructor
-Location::Location(std::string name, std::string description, bool visited, std::vector<NPC> NPCs, std::vector<Item> items) {
+Location::Location(std::string name, std::string description, bool visited) { //bool visited, std::vector<NPC> NPCs, std::vector<Item> items) {
     this->name = name;
     this->description = description;
     this->visited = visited;
@@ -53,4 +53,14 @@ void Location::addNPC(NPC npc) {
 }
 void Location::addItem(Item item) {
     items.push_back(item);
+}
+
+//overloading the stream operator for location
+std::ostream& operator<<(std::ostream& os, const Location& location) {
+    os << location.name << " - " << location.description << std::endl;
+    os << std::endl;
+    os << "You see the following NPCs:" << std::endl;
+    os << "\t- " << std::endl;
+
+    return os;
 }

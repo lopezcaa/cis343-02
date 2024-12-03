@@ -1,5 +1,5 @@
-#ifndef ITEM_H
-#define ITEM_H
+#ifndef __H_ITEM__
+#define __H_ITEM__
 
 #include <string>
 #include <iostream>
@@ -22,10 +22,7 @@ class Item {
         void setDescription(std::string description);
 
         //overloading the stream operator for item
-        friend std::ostream& operator<<(std::ostream& os, const Item& item) {
-            os << item.name << " (" << item.calories << " calories) - " << item.weight << " lb - " << item.description;
-            return os;
-        }
+        friend std::ostream& operator<<(std::ostream& os, const Item& item);
 
     private:
         std::string name;

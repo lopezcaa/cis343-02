@@ -66,3 +66,9 @@ void Item::setDescription(std::string description) {
 
     this->description = description;
 }
+
+std::ostream& operator<<(std::ostream& os, const Item& item) {
+    os << item.name << " (" << item.calories << " calories) - " << item.weight << " lb - " << item.description;
+    
+    return os;
+}

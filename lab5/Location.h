@@ -1,5 +1,5 @@
-#ifndef LOCATION_H
-#define LOCATION_H
+#ifndef __H_LOCATION__
+#define __H_LOCATION__
 
 #include <string>
 #include <iostream>
@@ -12,7 +12,7 @@
 class Location {
     public:
         //constructor
-        Location(std::string name, std::string description, bool visited, std::vector<NPC> NPCs, std::vector<Item> items);
+        Location(std::string name, std::string description, bool visited); //bool visited, std::vector<NPC> NPCs, std::vector<Item> items);
 
         //getters
         std::string getName();
@@ -30,10 +30,7 @@ class Location {
         void addItem(Item item);
 
         //overloading the stream operator for location
-        friend std::ostream& operator<<(std::ostream& os, const Location& location) {
-            os << location.name;
-            return os;
-        }
+        friend std::ostream& operator<<(std::ostream& os, const Location& location);
 
     private:
         std::string name;

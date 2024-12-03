@@ -46,3 +46,9 @@ void NPC::setMessageNum(int messageNum) {
 void NPC::setCurrentMessage(std::string message) {
     this->messages[messageNum] = message;
 }
+
+std::ostream& operator<<(std::ostream& os, const NPC& npc) {
+    os << npc.name;
+    
+    return os;
+}
