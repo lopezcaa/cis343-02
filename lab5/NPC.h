@@ -25,6 +25,9 @@ class NPC {
         //overloading the stream operator to show NPC's name only
         friend std::ostream& operator<<(std::ostream& os, const NPC& npc);
 
+        //overloading the == operator to compare two NPC objects
+        bool operator==(const NPC& other) const;
+
     private:
         std::string name;
         int messageNum;

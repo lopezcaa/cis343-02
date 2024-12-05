@@ -24,6 +24,9 @@ class Item {
         //overloading the stream operator for item
         friend std::ostream& operator<<(std::ostream& os, const Item& item);
 
+        //overloading the == operator to compare two Item objects
+        bool operator==(const Item& other) const;
+
     private:
         std::string name;
         int calories;

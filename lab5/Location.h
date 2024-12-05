@@ -12,22 +12,25 @@
 class Location {
     public:
         //constructor
-        Location(std::string name, std::string description, bool visited); //bool visited, std::vector<NPC> NPCs, std::vector<Item> items);
+        Location(std::string name, std::string description);
 
         //getters
         std::string getName();
         std::string getDescription();
-        bool getVisited();
-        std::map<std::string, Location*> getNeighbors();
-        std::vector<NPC> getNPCs();
-        std::vector<Item> getItems();
+        bool get_visited();
+        std::map<std::string, Location*> get_locations();
+        std::vector<NPC> get_npcs();
+        std::vector<Item> get_items();
 
         //setters
-        void setVisited(bool visited);
+        void setName(std::string name);
+        void setDescription(std::string description);
+        void set_visited(bool visited);
+        void add_location(std::string direction, Location* location);
+        void add_npc(NPC npc);
+        void add_item(Item item);
 
-        void addLocation(std::string direction, Location* location);
-        void addNPC(NPC npc);
-        void addItem(Item item);
+        void remove_item(Item& item);
 
         //overloading the stream operator for location
         friend std::ostream& operator<<(std::ostream& os, const Location& location);

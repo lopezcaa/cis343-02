@@ -72,3 +72,10 @@ std::ostream& operator<<(std::ostream& os, const Item& item) {
     
     return os;
 }
+
+bool Item::operator==(const Item& other) const {
+    return (name == other.name) &&
+           (calories == other.calories) &&
+           (weight == other.weight) &&
+           (description == other.description);
+}

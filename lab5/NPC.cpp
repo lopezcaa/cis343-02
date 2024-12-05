@@ -52,3 +52,7 @@ std::ostream& operator<<(std::ostream& os, const NPC& npc) {
     
     return os;
 }
+
+bool NPC::operator==(const NPC& other) const {
+    return (name == other.name) && (description == other.description);
+}
