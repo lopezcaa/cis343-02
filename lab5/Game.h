@@ -44,6 +44,8 @@ class Game {
         void create_world();
         Location* random_location();
 
+        bool newArea = true;
+
 };
 
 #endif
