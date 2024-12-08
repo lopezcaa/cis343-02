@@ -18,41 +18,26 @@ NPC::NPC(std::string name, std::string description, std::vector<std::string> mes
 }
 
 //getter methods
-std::string NPC::getName() {
+std::string NPC::getName() const {
     return name;
 }
-std::string NPC::getDescription() {
+
+std::string NPC::getDescription() const {
     return description;
 }
-int NPC::getMessageNum() {
+
+int NPC::getMessageNum() const {
     return messageNum;
 }
+
 std::string NPC::getCurrentMessage() {
     std::string currentMessage = messages[messageNum];
     messageNum = (messageNum + 1) % messages.size(); //% by the total message size prevent overflow
     return currentMessage;
 }
 
-//setter methods
-void NPC::setName(std::string name) {
-    this->name = name;
-}
-void NPC::setDescription(std::string description) {
-    this->description = description;
-}
-void NPC::setMessageNum(int messageNum) {
-    this->messageNum = messageNum;
-}
-void NPC::setCurrentMessage(std::string message) {
-    this->messages[messageNum] = message;
-}
-
 std::ostream& operator<<(std::ostream& os, const NPC& npc) {
     os << npc.name;
     
     return os;
-}
-
-bool NPC::operator==(const NPC& other) const {
-    return (name == other.name) && (description == other.description);
 }

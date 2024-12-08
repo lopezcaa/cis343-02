@@ -14,6 +14,7 @@ Game::Game() {
     create_world();
     setup_commands();
     player_location = random_location();
+    player_location->set_visited(true); //Sets the starting location as visited
 }
 
 //game loop
@@ -25,14 +26,14 @@ void Game::play() {
 
     //Main loop
     while(game_in_progress) {
-        if(newArea) {
+        if(has_player_moved) {
             // Show current location and available items, NPCs, and directions
             look({});  // This will call the 'look' method, which shows the location's details
-            newArea = false;
+            has_player_moved = false;
         }
 
         // Prompt the user for a command
-        std::cout << "\n----------------------------\n" << "\nWhat would you like to do?:\n=>";
+        std::cout << "----------------------------\n" << "\nWhat would you like to do?:\n=>";
         std::string input;
         std::getline(std::cin, input);  // Read the full line of input
         std::cout << std::endl;
@@ -62,25 +63,26 @@ void Game::play() {
 void Game::setup_commands() {
     commands["help"] = std::bind(&Game::show_help, this, std::placeholders::_1);
     commands["talk"] = std::bind(&Game::talk, this, std::placeholders::_1);
-    commands["give"] = std::bind(&Game::give, this, std::placeholders::_1);
+    commands["meet"] = std::bind(&Game::meet, this, std::placeholders::_1);
     commands["take"] = std::bind(&Game::take, this, std::placeholders::_1);
+    commands["give"] = std::bind(&Game::give, this, std::placeholders::_1);
     commands["go"] = std::bind(&Game::go, this, std::placeholders::_1);
+    commands["items"] = std::bind(&Game::show_items, this, std::placeholders::_1);
     commands["look"] = std::bind(&Game::look, this, std::placeholders::_1);
     commands["quit"] = std::bind(&Game::quit, this, std::placeholders::_1);
-    commands["items"] = std::bind(&Game::show_items, this, std::placeholders::_1);
-    commands["meet"] = std::bind(&Game::meet, this, std::placeholders::_1);
 }
 
 void Game::show_help(std::vector<std::string> target) {
     std::cout << "Game Commands:" << std::endl;
     std::cout << "help - Shows this help message" << std::endl;
     std::cout << "talk <NPC name> - Talk to an NPC" << std::endl;
-    std::cout << "give <item> - Give an item to the elf" << std::endl;
+    std::cout << "meet <NPC name> - Show description of an NPC" << std::endl;
     std::cout << "take <item> - Take an item" << std::endl;
+    std::cout << "give <item> - Give an item to the elf" << std::endl;
     std::cout << "go <direction> - Move to a new location" << std::endl;
+    std::cout << "items - Show the items in your inventory" << std::endl << std::endl;
     std::cout << "look - Look around the current location" << std::endl;
     std::cout << "quit - End the game" << std::endl;
-    std::cout << "items - Show the items in your inventory" << std::endl << std::endl;
     
     // Print current time
     time_t now = time(0);
@@ -94,6 +96,7 @@ void Game::talk(std::vector<std::string> target) {
         return;
     }
 
+    //Get the full string from target and stores it in npcName
     std::string npcName;
     for (size_t i = 0; i < target.size(); ++i) {
         npcName += target[i];
@@ -104,9 +107,8 @@ void Game::talk(std::vector<std::string> target) {
     
     bool npcPresent = false;
     for(auto& npc : player_location->get_npcs()) {
-        if(npc.getName() == npcName) {
-            std::cout << npc.getCurrentMessage() << std::endl;
-            std::cout << npc.getCurrentMessage() << std::endl;
+        if(npc->getName() == npcName) {
+            std::cout << npc->getCurrentMessage() << std::endl;
             npcPresent = true;
             break;
         }
@@ -133,15 +135,15 @@ void Game::meet(std::vector<std::string> target) {
 
     bool npcPresent = false;
     for(auto& npc : player_location->get_npcs()) {
-        if(npc.getName() == npcName) {
-            std::cout << npc.getDescription() << std::endl;
+        if(npc->getName() == npcName) {
+            std::cout << npc->getDescription() << std::endl;
             npcPresent = true;
             break;
         }
     }
 
     if(!npcPresent) {
-        std::cout << npcName << "is not here to meet." << std::endl;
+        std::cout << npcName << " is not here to meet." << std::endl;
     }
 }
 
@@ -161,8 +163,8 @@ void Game::take(std::vector<std::string> target) {
 
     Item* itemToTake = nullptr;
     for(auto& item : player_location->get_items()) {
-        if(item.getName() == itemName) {
-            itemToTake = &item;
+        if(item->getName() == itemName) {
+            itemToTake = item;
             break;
         }
     }
@@ -172,10 +174,10 @@ void Game::take(std::vector<std::string> target) {
         return;
     }
 
-    player_items.push_back(*itemToTake);
+    player_items.push_back(itemToTake);
     player_weight += itemToTake->getWeight();
 
-    player_location->remove_item(*itemToTake);
+    player_location->remove_item(itemToTake);
 
     std::cout << "You have taken [" << itemName << "]." << std::endl;
     if(player_weight > 30.0) {
@@ -200,8 +202,8 @@ void Game::give(std::vector<std::string> target) {
     // Check if the target item is in the player's inventory
     Item* itemToGive = nullptr;
     for(auto& item : player_items) {
-        if(item.getName() == itemName) {
-            itemToGive = &item;
+        if(item->getName() == itemName) {
+            itemToGive = item;
             break;
         }
     }
@@ -214,17 +216,15 @@ void Game::give(std::vector<std::string> target) {
 
     // Remove item from the player's inventory and reduce their carried weight
     player_weight -= itemToGive->getWeight();
-    player_items.erase(std::remove(player_items.begin(), player_items.end(), *itemToGive), player_items.end());
-    
-    // Add item to the current location's items list
-    //player_location->add_item(*itemToGive);
+    player_items.erase(std::remove(player_items.begin(), player_items.end(), itemToGive), player_items.end());
 
     // Check if the location is the woods and handle the item accordingly
     if(player_location->getName() == "Woods") {
         if(itemToGive->getCalories() > 0) {
-            elf_calories -= itemToGive->getCalories();
+            elf_calories += itemToGive->getCalories();
             std::cout << "You gave the elf [" << itemToGive->getName() << "] (" << itemToGive->getCalories() << " calories)." << std::endl;
-            std::cout << "The elf ate the " << itemToGive->getName() << std::endl;
+            std::cout << "The elf ate the " << itemToGive->getName() << "." << std::endl;
+            std::cout << "Total calories eaten: " << elf_calories << "/300 calories" << std::endl;
             if(elf_calories >= 300) {
                 std::cout << "The elf has eaten enough calories. The campus has been saved!" << std::endl;
                 game_in_progress = false;
@@ -259,20 +259,15 @@ void Game::go(std::vector<std::string> target) {
             direction += " ";
         }
     }
-    
-    auto neighbors = player_location->get_locations();
 
+    auto neighbors = player_location->get_locations();
     if(neighbors.find(direction) != neighbors.end()) {
         //The direction exists, so move to new location
-        Location* newLocation = neighbors[direction];
-
-        // Mark the current location as visited
+        player_location = neighbors[direction];
         player_location->set_visited(true);
 
-        // Update the current location to the new location
-        player_location = newLocation;
-        std::cout << "You have moved to " << player_location->getName() << "." << std::endl;
-        newArea = true; //This will set the game loop to repeat the location data on the game
+        std::cout << "You have moved to [" << player_location->getName() << "]." << std::endl << std::endl;
+        has_player_moved = true; //This will set the game loop to repeat the location data output on the game text interface
     } else {
         // The direction doesn't exist in the neighbors map
         std::cout << "You can't go that way. There's no path in that direction." << std::endl;
@@ -287,41 +282,13 @@ void Game::show_items(std::vector<std::string> target) {
     } else {
         std::cout << "Your items:" << std::endl;
         for(auto& item : player_items) {
-            std::cout << "\t- " << item << std::endl;
+            std::cout << "\t- " << *item << std::endl;
         }
     }
 }
 
 void Game::look(std::vector<std::string> target) {
-    std::cout << "You're currently at [" << player_location->getName() << " (" << player_location->getDescription() << ")]" << std::endl << std::endl;
-
-    if(player_location->get_items().empty()) {
-        std::cout << "There are no items here." << std::endl;
-    } else {
-        std::cout << "You see the following items:" << std::endl;
-        for(auto& item : player_location->get_items()) {
-            std::cout << "\t- " <<  item << std::endl;
-        }
-    }
-
-    if(player_location->get_npcs().empty()) {
-        std::cout << "You are alone." << std::endl;
-    } else {
-        std::cout << "You see the following people:" << std::endl;
-        for(auto& npc : player_location->get_npcs()) {
-            std::cout << "\t- " << npc << std::endl;
-        }
-    }
-
-    std::cout << "You can go in the following directions:" << std::endl;
-    auto neighbors = player_location->get_locations();
-    for(auto& neighbor : neighbors) {
-        std::cout << "\t- " << neighbor.first << " - " << neighbor.second->getName();
-        if(neighbor.second->get_visited()) {
-            std::cout << " (Visited)";
-        }
-        std::cout << std::endl;
-    }
+    std::cout << *player_location;
 }
 
 void Game::quit(std::vector<std::string> target) {
@@ -359,12 +326,12 @@ void Game::create_world() {
     woods->add_location("West", huron);
 
     //Creating the NPCs
-    NPC elf("Elf", "This elf will save the campus once properly fed.", {"Hello traveler. I'm very hungry. Do you have food?", "Once I'm properly fed, I can help you out.", "The campus is in danger? I'm too hungry to help. Maybe I can help after I eat!"});
-    NPC npc1("Robert", "Robert likes to read books.", {"Hi! My name is Robert.", "Do you have a favorite book?"});
-    NPC npc2("Nick", "Nick likes to work with computers.", {"My name's Nick! I work with computers", "Is your computer broken? I can fix it!"});
-    NPC npc3("Cindy", "Cindy is studying reading a book.", {"Oh, hello! My name is Cindy.", "This book from my class is very interesting!"});
-    NPC npc4("Harry", "Harry is idling waiting for his next class", {"Nice to meet you! My name is Harry!", "Is something happening around campus? I'm bored waiting for class."});
-    NPC npc5("Sally", "Sally is buying food at Kirkhof", {"My name is Sally, nice to meet you!", "I can't wait to eat my food, I'm hungry!"});
+    NPC* elf = new NPC("Elf", "This elf will save the campus once properly fed.", {"Hello traveler. I'm very hungry. Do you have food?", "Once I'm properly fed, I can help you out.", "The campus is in danger? I'm too hungry to help. Maybe I can help after I eat!"});
+    NPC* npc1 = new NPC("Robert", "Robert likes to read books.", {"Hi! My name is Robert.", "Do you have a favorite book?"});
+    NPC* npc2 = new NPC("Nick", "Nick likes to work with computers.", {"My name's Nick! I work with computers", "Is your computer broken? I can fix it!"});
+    NPC* npc3 = new NPC("Cindy", "Cindy is studying reading a book.", {"Oh, hello! My name is Cindy.", "This book from my class is very interesting!"});
+    NPC* npc4 = new NPC("Harry", "Harry is idling waiting for his next class", {"Nice to meet you! My name is Harry!", "Is something happening around campus? I'm bored waiting for class.", "There's a rumour going around that a Golden Apple can be found south of here.\nIt must be tasty!"});
+    NPC* npc5 = new NPC("Sally", "Sally is buying food at Kirkhof", {"My name is Sally, nice to meet you!", "I can't wait to eat my food, I'm hungry!"});
 
     //Adding the NPCs to locations
     woods->add_npc(elf);
@@ -375,16 +342,16 @@ void Game::create_world() {
     kirkhof->add_npc(npc5);
 
     //Creating items
-    Item item01("Rusty Nail", 0, 1, "A rusty nail (I hope you've had a tetanus shot)");
-    Item item02("Apple", 50, 10, "A red apple");
-    Item item03("Golden Apple", 150, 15, "A golden apple. It looks like it has lots of calories!");
-    Item item04("Bag of rocks", 0, 10, "A bag of rocks");
-    Item item05("Cookies", 65, 10, "Some regular cookies");
-    Item item06("Taco", 80, 15, "A great-tasting taco");
-    Item item07("Candy", 25, 5, "A small pile of candy");
-    Item item09("Coal", 0, 20, "A lump of coal");
-    Item item08("Bread", 100, 10, "A loaf of bread");
-    Item item10("Orange", 80, 15, "A orange");
+    Item* item01 = new Item("Rusty Nail", 0, 1, "A rusty nail (I hope you've had a tetanus shot)");
+    Item* item02 = new Item("Apple", 50, 10, "A red apple");
+    Item* item03 = new Item("Golden Apple", 150, 15, "A golden apple. It looks like it has lots of calories!");
+    Item* item04 = new Item("Bag of rocks", 0, 10, "A bag of rocks");
+    Item* item05 = new Item("Cookies", 65, 10, "Some regular cookies");
+    Item* item06 = new Item("Taco", 80, 15, "A great-tasting taco");
+    Item* item07 = new Item("Candy", 25, 5, "A small pile of candy");
+    Item* item08 = new Item("Coal", 0, 20, "A lump of coal");
+    Item* item09 = new Item("Bread", 100, 10, "A loaf of bread");
+    Item* item10 = new Item("Orange", 80, 15, "An orange");
 
     ontario->add_item(item01);
     kirkhof->add_item(item02);
@@ -397,23 +364,23 @@ void Game::create_world() {
     padnos->add_item(item09);
     kirkhof->add_item(item10);
 
-    locations.push_back(*padnos);
-    locations.push_back(*mack);
-    locations.push_back(*kirkhof);
-    locations.push_back(*michigan);
-    locations.push_back(*library);
-    locations.push_back(*ontario);
-    locations.push_back(*huron);
-    locations.push_back(*woods);
+    game_locations.push_back(padnos);
+    game_locations.push_back(mack);
+    game_locations.push_back(kirkhof);
+    game_locations.push_back(michigan);
+    game_locations.push_back(library);
+    game_locations.push_back(ontario);
+    game_locations.push_back(huron);
+    game_locations.push_back(woods);
 }
 
 Location* Game::random_location() {
-    if (locations.empty()) {
+    if (game_locations.empty()) {
         throw std::runtime_error("No locations available.");
     }
 
     srand(time(0));
-    int random_index = rand() % locations.size();
+    int random_index = rand() % game_locations.size();
 
-    return &locations[random_index];
+    return game_locations[random_index];
 }

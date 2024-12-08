@@ -21,7 +21,6 @@ class Game {
         void play();
 
         void setup_commands();
-
         void show_help(std::vector<std::string> target);
         void talk(std::vector<std::string> target);
         void meet(std::vector<std::string> target);
@@ -32,19 +31,19 @@ class Game {
         void look(std::vector<std::string> target);
         void quit(std::vector<std::string> target);
 
+        void create_world();
+        Location* random_location();
+
     private:
         std::map<std::string, std::function<void(std::vector<std::string>)>> commands;
-        std::vector<Item> player_items;
-        int player_weight;
-        std::vector<Location> locations;
+        std::vector<Item*> player_items;
+        float player_weight;
+        std::vector<Location*> game_locations;
         Location* player_location;
         int elf_calories;
         bool game_in_progress;
 
-        void create_world();
-        Location* random_location();
-
-        bool newArea = true;
+        bool has_player_moved = true; // bool to declare a location has been moved to. Used in Game.cpp to only run look() when movement is used.
 
 };
 

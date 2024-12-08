@@ -24,58 +24,24 @@ Item::Item(std::string name, int calories, float weight, std::string description
 }
 
 //getter methods
-std::string Item::getName() {
+std::string Item::getName() const {
     return name;
 }
-std::string Item::getDescription() {
-    return description;
-}
-int Item::getCalories() {
+
+int Item::getCalories() const {
     return calories;
 }
-float Item::getWeight() {
+
+float Item::getWeight() const {
     return weight;
 }
 
-//setters methods
-void Item::setName(std::string name) {
-    if(name.empty()) {
-        throw std::invalid_argument("Name can't be blank.");
-    }
-    
-    this->name = name;
-}
-void Item::setCalories(int calories) {
-    if(calories < 0 || calories > 1000) {
-        throw std::out_of_range("Calories must be between 0 and 1000.");
-    }
-
-    this->calories = calories;
-}
-void Item::setWeight(float weight) {
-    if(weight < 0 || weight > 500) {
-        throw std::out_of_range("Weight must be between 0 and 500");
-    }
-
-    this->weight = weight;
-}
-void Item::setDescription(std::string description) {
-    if(description.empty()) {
-        throw std::invalid_argument("Description can't be blank.");
-    }
-
-    this->description = description;
+std::string Item::getDescription() const {
+    return description;
 }
 
 std::ostream& operator<<(std::ostream& os, const Item& item) {
     os << item.name << " (" << item.calories << " calories) - " << item.weight << " lb - " << item.description;
     
     return os;
-}
-
-bool Item::operator==(const Item& other) const {
-    return (name == other.name) &&
-           (calories == other.calories) &&
-           (weight == other.weight) &&
-           (description == other.description);
 }

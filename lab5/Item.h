@@ -10,16 +10,10 @@ class Item {
         Item(std::string name, int calories, float weight, std::string description);
 
         //getters
-        std::string getName();
-        int getCalories();
-        float getWeight();
-        std::string getDescription();
-
-        //setters
-        void setName(std::string name);
-        void setCalories(int calories);
-        void setWeight(float weight);
-        void setDescription(std::string description);
+        std::string getName() const;
+        int getCalories() const;
+        float getWeight() const;
+        std::string getDescription() const;
 
         //overloading the stream operator for item
         friend std::ostream& operator<<(std::ostream& os, const Item& item);

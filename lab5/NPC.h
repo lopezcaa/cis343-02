@@ -11,16 +11,10 @@ class NPC {
         NPC(std::string name, std::string description, std::vector<std::string> messages);
 
         //getters
-        std::string getName();
-        std::string getDescription();
-        int getMessageNum();
+        std::string getName() const;
+        std::string getDescription() const;
+        int getMessageNum() const;
         std::string getCurrentMessage();
-
-        //setters
-        void setName(std::string name);
-        void setDescription(std::string description);
-        void setMessageNum(int messageNum);
-        void setCurrentMessage(std::string message);
 
         //overloading the stream operator to show NPC's name only
         friend std::ostream& operator<<(std::ostream& os, const NPC& npc);

@@ -7,40 +7,36 @@ Location::Location(std::string name, std::string description) {
     this->name = name;
     this->description = description;
     this->visited = false;
-    this->NPCs = NPCs;
-    this->items = items;
+    //this->NPCs = NPCs;
+    //this->items = items;
 }
 
 //getter methods
-std::string Location::getName() {
+std::string Location::getName() const {
     return name;
 }
-std::string Location::getDescription() {
+
+std::string Location::getDescription() const {
     return description;
 }
-bool Location::get_visited() {
-    return visited;
-}
-std::map<std::string, Location*> Location::get_locations() {
+
+std::map<std::string, Location*> Location::get_locations() const {
     return neighbors;
 }
-std::vector<NPC> Location::get_npcs() {
+
+std::vector<NPC*> Location::get_npcs() const {
     return NPCs;
 }
-std::vector<Item> Location::get_items() {
+
+std::vector<Item*> Location::get_items() const {
     return items;
 }
 
+bool Location::get_visited() {
+    return visited;
+}
+
 //setter methods
-void Location::setName(std::string name) {
-    this->name = name;
-}
-void Location::setDescription(std::string description) {
-    this->description = description;
-}
-void Location::set_visited(bool visited) {
-    this->visited = visited;
-}
 void Location::add_location(std::string direction, Location* location) {
     if(direction.empty()) {
         throw std::invalid_argument("Direction can't be blank.");
@@ -51,19 +47,26 @@ void Location::add_location(std::string direction, Location* location) {
 
     neighbors[direction] = location;
 }
-void Location::add_npc(NPC npc) {
+
+void Location::add_npc(NPC* npc) {
     NPCs.push_back(npc);
 }
-void Location::add_item(Item item) {
+
+void Location::add_item(Item* item) {
     items.push_back(item);
 }
 
-void Location::remove_item(Item& item) {
-    for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++) {
-        if(*itemIter == item) {
-            items.erase(itemIter);
-            break;
-        }
+void Location::set_visited(bool visited) {
+    this->visited = visited;
+}
+
+void Location::remove_item(Item* item) {
+    // Find the item in the vector using std::find
+    auto it = std::find(items.begin(), items.end(), item);
+
+    // If the item is found, erase it from the vector
+    if (it != items.end()) {
+        items.erase(it);  // Removes the item from the vector
     }
 }
 
@@ -74,16 +77,16 @@ std::ostream& operator<<(std::ostream& os, const Location& location) {
     if(!location.NPCs.empty()) {
         os << "You see the following NPCs:" << std::endl;
         for(auto& npc : location.NPCs) {
-            os << "\t- " << npc << std::endl;
+            os << "\t- " << *npc << std::endl;
         }
     } else {
         os << "There are no NPCs here." << std::endl;
     }
 
     if(!location.items.empty()) {
-        os << std::endl << "You  see the following Items:" << std::endl;
+        os << std::endl << "You see the following Items:" << std::endl;
         for(auto& item : location.items) {
-            os << "\t- " << item << std::endl;
+            os << "\t- " << *item << std::endl;
         }
     } else {
         os << std::endl << "There are no items here." << std::endl;
@@ -94,7 +97,7 @@ std::ostream& operator<<(std::ostream& os, const Location& location) {
         if(neighbor.second->get_visited()) {
             os << "\t- " << neighbor.first << " - " << neighbor.second->getName() << " (Visited)";
         } else {
-            os << "\t- " << neighbor.first << " - Unkown";
+            os << "\t- " << neighbor.first << " - Unknown";
         }
         os << std::endl;
     }
