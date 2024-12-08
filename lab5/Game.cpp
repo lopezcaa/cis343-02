@@ -22,7 +22,10 @@ void Game::play() {
     std::string userInput;
     bool validInput = false;
 
-    std::cout << "--- GVZork ---" << std::endl;
+    std::cout << "--- GVZork ---" << std::endl << std::endl;
+
+    show_help({});
+    std::cout << "----------------------------" << std::endl << std::endl;
 
     //Main loop
     while(game_in_progress) {
@@ -33,7 +36,7 @@ void Game::play() {
         }
 
         // Prompt the user for a command
-        std::cout << "----------------------------\n" << "\nWhat would you like to do?:\n=>";
+        std::cout << "----------------------------" << std::endl << std::endl << "What would you like to do?:" << std::endl << "=>";
         std::string input;
         std::getline(std::cin, input);  // Read the full line of input
         std::cout << std::endl;
@@ -80,14 +83,22 @@ void Game::show_help(std::vector<std::string> target) {
     std::cout << "take <item> - Take an item" << std::endl;
     std::cout << "give <item> - Give an item to the elf" << std::endl;
     std::cout << "go <direction> - Move to a new location" << std::endl;
-    std::cout << "items - Show the items in your inventory" << std::endl << std::endl;
+    std::cout << "items - Show the items in your inventory" << std::endl;
     std::cout << "look - Look around the current location" << std::endl;
-    std::cout << "quit - End the game" << std::endl;
+    std::cout << "quit - End the game" << std::endl << std::endl;
     
-    // Print current time
-    time_t now = time(0);
-    char* dt = ctime(&now);
-    std::cout << "Current time: " << dt << std::endl;
+    time_t now = time(0);  // Get the current time
+    struct tm tstruct;
+    char buf[80];
+
+    // Convert to local time and store it in tstruct
+    tstruct = *localtime(&now);
+
+    // Format the time in the desired format
+    strftime(buf, sizeof(buf), "Current time: %a %b %d %Y %H:%M:%S", &tstruct);
+
+    // Output the formatted time
+    std::cout << buf << std::endl;
 }
 
 void Game::talk(std::vector<std::string> target) {
@@ -104,10 +115,15 @@ void Game::talk(std::vector<std::string> target) {
             npcName += " ";
         }
     }
+
+    std::transform(npcName.begin(), npcName.end(), npcName.begin(), [](unsigned char c) {return std::tolower(c);});
     
     bool npcPresent = false;
     for(auto& npc : player_location->get_npcs()) {
-        if(npc->getName() == npcName) {
+        std::string npcCompareName = npc->getName();
+        std::transform(npcCompareName.begin(), npcCompareName.end(), npcCompareName.begin(), [](unsigned char c) {return std::tolower(c);});
+
+        if(npcCompareName == npcName) {
             std::cout << npc->getCurrentMessage() << std::endl;
             npcPresent = true;
             break;
@@ -133,9 +149,14 @@ void Game::meet(std::vector<std::string> target) {
         }
     }
 
+    std::transform(npcName.begin(), npcName.end(), npcName.begin(), [](unsigned char c) {return std::tolower(c);});
+
     bool npcPresent = false;
     for(auto& npc : player_location->get_npcs()) {
-        if(npc->getName() == npcName) {
+        std::string npcCompareName = npc->getName();
+        std::transform(npcCompareName.begin(), npcCompareName.end(), npcCompareName.begin(), [](unsigned char c) {return std::tolower(c);});
+
+        if(npcCompareName == npcName) {
             std::cout << npc->getDescription() << std::endl;
             npcPresent = true;
             break;
@@ -160,10 +181,17 @@ void Game::take(std::vector<std::string> target) {
             itemName += " ";
         }
     }
+    
+    std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) {return std::tolower(c);});
 
     Item* itemToTake = nullptr;
+    std::string holdCapitalizedName;
     for(auto& item : player_location->get_items()) {
-        if(item->getName() == itemName) {
+        holdCapitalizedName = item->getName();
+        std::string itemCompareName = item->getName();
+        std::transform(itemCompareName.begin(), itemCompareName.end(), itemCompareName.begin(), [](unsigned char c) {return std::tolower(c);});
+
+        if(itemCompareName == itemName) {
             itemToTake = item;
             break;
         }
@@ -179,7 +207,7 @@ void Game::take(std::vector<std::string> target) {
 
     player_location->remove_item(itemToTake);
 
-    std::cout << "You have taken [" << itemName << "]." << std::endl;
+    std::cout << "You have taken [" << holdCapitalizedName << "]." << std::endl;
     if(player_weight > 30.0) {
         std::cout << "You have gone over your max carrying weight limit!" << std::endl;
     }
@@ -199,10 +227,15 @@ void Game::give(std::vector<std::string> target) {
         }
     }
 
+    std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) {return std::tolower(c);});
+
     // Check if the target item is in the player's inventory
     Item* itemToGive = nullptr;
     for(auto& item : player_items) {
-        if(item->getName() == itemName) {
+        std::string itemCompareName = item->getName();
+        std::transform(itemCompareName.begin(), itemCompareName.end(), itemCompareName.begin(), [](unsigned char c) {return std::tolower(c);});
+
+        if(itemCompareName == itemName) {
             itemToGive = item;
             break;
         }
