@@ -1,11 +1,9 @@
-#include <iostream>
-#include <string>
+/**
+ * main.cpp
+ * By: Alonso Lopez
+ */
 
-#include "Item.h"
-#include "NPC.h"
-#include "Location.h"
 #include "Game.h"
-
 
 int main(int argc, char** argv) {
     Game game;

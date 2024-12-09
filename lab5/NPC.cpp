@@ -1,3 +1,8 @@
+/**
+ * NPC.cpp
+ * By: Alonso Lopez
+ */
+
 #include <stdexcept>
 
 #include "NPC.h"
@@ -18,24 +23,30 @@ NPC::NPC(std::string name, std::string description, std::vector<std::string> mes
 }
 
 //getter methods
+
+//returns NPC name
 std::string NPC::getName() const {
     return name;
 }
 
+//returns NPC description
 std::string NPC::getDescription() const {
     return description;
 }
 
+//returns NPC message number index
 int NPC::getMessageNum() const {
     return messageNum;
 }
 
+//returns the NPC's current message
 std::string NPC::getCurrentMessage() {
     std::string currentMessage = messages[messageNum];
     messageNum = (messageNum + 1) % messages.size(); //% by the total message size prevent overflow
     return currentMessage;
 }
 
+//overloads the stream operator for NPC to return the name only
 std::ostream& operator<<(std::ostream& os, const NPC& npc) {
     os << npc.name;
     

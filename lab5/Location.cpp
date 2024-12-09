@@ -1,3 +1,8 @@
+/**
+ * Location.cpp
+ * By: Alonso Lopez
+ */
+
 #include <stdexcept>
 
 #include "Location.h"
@@ -7,36 +12,43 @@ Location::Location(std::string name, std::string description) {
     this->name = name;
     this->description = description;
     this->visited = false;
-    //this->NPCs = NPCs;
-    //this->items = items;
 }
 
 //getter methods
+
+//returns location's name
 std::string Location::getName() const {
     return name;
 }
 
+//returns location's description
 std::string Location::getDescription() const {
     return description;
 }
 
+//returns location map of neighboring locations
 std::map<std::string, Location*> Location::get_locations() const {
     return neighbors;
 }
 
+//returns vector of NPC pointers
 std::vector<NPC*> Location::get_npcs() const {
     return NPCs;
 }
 
+//returns vector of item pointers
 std::vector<Item*> Location::get_items() const {
     return items;
 }
 
+//returns bool if location was visited or not
 bool Location::get_visited() {
     return visited;
 }
 
 //setter methods
+
+//adds a location pointer to the neighboring location map
 void Location::add_location(std::string direction, Location* location) {
     if(direction.empty()) {
         throw std::invalid_argument("Direction can't be blank.");
@@ -48,18 +60,22 @@ void Location::add_location(std::string direction, Location* location) {
     neighbors[direction] = location;
 }
 
+//adds a NPC pointer to the vector of NPC pointers
 void Location::add_npc(NPC* npc) {
     NPCs.push_back(npc);
 }
 
+//adds an item pointer to the vctor of item pointers
 void Location::add_item(Item* item) {
     items.push_back(item);
 }
 
+//sets the value of the visited bool for the location
 void Location::set_visited(bool visited) {
     this->visited = visited;
 }
 
+//removes an item from the vector of item pointers
 void Location::remove_item(Item* item) {
     // Find the item in the vector using std::find
     auto it = std::find(items.begin(), items.end(), item);

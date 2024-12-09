@@ -1,3 +1,8 @@
+/**
+ * NPC.h
+ * By: Alonso Lopez
+ */
+
 #ifndef __H_NPC__
 #define __H_NPC__
 
@@ -11,16 +16,13 @@ class NPC {
         NPC(std::string name, std::string description, std::vector<std::string> messages);
 
         //getters
-        std::string getName() const;
-        std::string getDescription() const;
-        int getMessageNum() const;
-        std::string getCurrentMessage();
+        std::string getName() const; //returns NPC name
+        std::string getDescription() const; //returns NPC description
+        int getMessageNum() const; //returns NPC message index number
+        std::string getCurrentMessage(); //returns NPC's current message
 
         //overloading the stream operator to show NPC's name only
         friend std::ostream& operator<<(std::ostream& os, const NPC& npc);
-
-        //overloading the == operator to compare two NPC objects
-        bool operator==(const NPC& other) const;
 
     private:
         std::string name;
