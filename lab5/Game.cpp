@@ -1,6 +1,10 @@
 /**
+ * Lab 5: GVZork
+ * 
  * Game.cpp
+ * 
  * By: Alonso Lopez
+ * 12-09-2024
  */
 
 #include <stdexcept>

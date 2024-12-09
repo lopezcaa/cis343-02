@@ -1,6 +1,10 @@
 /**
+ * Lab 5: GVZork
+ * 
  * Location.cpp
+ * 
  * By: Alonso Lopez
+ * 12-09-2024
  */
 
 #include <stdexcept>

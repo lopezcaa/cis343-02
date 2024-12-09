@@ -1,6 +1,10 @@
 /**
+ * Lab 5: GVZork
+ * 
  * Item.h
+ * 
  * By: Alonso Lopez
+ * 12-09-2024
  */
 
 #ifndef __H_ITEM__
