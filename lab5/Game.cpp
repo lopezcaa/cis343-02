@@ -4,7 +4,7 @@
  * Game.cpp
  * 
  * By: Alonso Lopez
- * 12-09-2024
+ * 12-10-2024
  */
 
 #include <stdexcept>
@@ -635,8 +635,20 @@ Location* Game::random_location() {
         throw std::runtime_error("No locations available.");
     }
 
-    srand(time(0));
-    int random_index = rand() % game_locations.size();
+    //variables for the while loop and return index
+    int random_index;
+    bool not_Woods = true;
+
+    //this loops until the woods is not chosen
+    while(not_Woods) {
+        srand(time(0));
+        random_index = rand() % game_locations.size();
+
+        if(game_locations[random_index]->getName() != "Woods") {
+            not_Woods = false;
+        }
+    }
+
 
     return game_locations[random_index];
 }
