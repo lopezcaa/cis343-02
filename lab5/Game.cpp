@@ -637,15 +637,15 @@ Location* Game::random_location() {
 
     //variables for the while loop and return index
     int random_index;
-    bool not_Woods = true;
+    bool not_Woods = false;
 
     //this loops until the woods is not chosen
-    while(not_Woods) {
+    while(!not_Woods) {
         srand(time(0));
         random_index = rand() % game_locations.size();
 
         if(game_locations[random_index]->getName() != "Woods") {
-            not_Woods = false;
+            not_Woods = true;
         }
     }
 
